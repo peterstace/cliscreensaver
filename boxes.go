@@ -68,15 +68,15 @@ func (s *screen) print(w io.Writer) {
 func quantize(v float64) (int, float64) {
 	switch {
 	case v < 0.2:
-		return 0, v - 0.1
+		return 0, v
 	case v < 0.4:
-		return 1, v - 0.3
+		return 1, v - 0.25
 	case v < 0.6:
 		return 2, v - 0.5
 	case v < 0.8:
-		return 3, v - 0.7
+		return 3, v - 0.75
 	default:
-		return 4, v - 0.9
+		return 4, v - 1.0
 	}
 }
 
