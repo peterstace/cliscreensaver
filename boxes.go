@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"syscall"
@@ -26,26 +27,25 @@ func (s *screen) rowCol(i int) (int, int) {
 }
 
 func (s *screen) print(w io.Writer) {
-	writeCursorPosition(w, 1, 1)
-	w.Write([]byte("\x1b[37;40m"))
+	var buf bytes.Buffer
+	writeCursorPosition(&buf, 1, 1)
+	buf.Write([]byte("\x1b[37;40m"))
 	for i := range s.data {
 		level, qerr := quantize(s.data[i])
 		switch level {
 		case 0:
-			w.Write([]byte(" "))
+			buf.Write([]byte(" "))
 		case 1:
-			w.Write([]byte("░"))
+			buf.Write([]byte("░"))
 		case 2:
-			w.Write([]byte("▒"))
+			buf.Write([]byte("▒"))
 		case 3:
-			w.Write([]byte("▓"))
+			buf.Write([]byte("▓"))
 		case 4:
-			w.Write([]byte("\x1b[30;47m \x1b[37;40m"))
+			buf.Write([]byte("\x1b[30;47m \x1b[37;40m"))
 		default:
 			panic(level)
 		}
-
-		// TODO: Maybe do serpentine left/right.
 		r, c := s.rowCol(i)
 		qerr /= 16
 		if c != s.cols-1 {
@@ -62,7 +62,8 @@ func (s *screen) print(w io.Writer) {
 		}
 
 	}
-	w.Write([]byte("\x1b[m"))
+	buf.Write([]byte("\x1b[m"))
+	io.Copy(w, &buf)
 }
 
 func quantize(v float64) (int, float64) {
