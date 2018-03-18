@@ -12,14 +12,14 @@ func newScreen(rows, cols int) screen {
 	return screen{
 		rows: rows,
 		cols: cols,
-		data: make([]rgb, rows*cols),
+		data: make([]lrgb, rows*cols),
 	}
 }
 
 type screen struct {
 	rows int
 	cols int
-	data []rgb // row-major order
+	data []lrgb // row-major order
 }
 
 func (s *screen) rowCol(i int) (int, int) {
