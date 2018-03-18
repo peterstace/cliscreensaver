@@ -1,5 +1,10 @@
 package main
 
+import (
+	"math"
+	"math/rand"
+)
+
 // lrgb represents a linear RGB color. Each element should be between 0 and 1
 // (inclusive).
 type lrgb struct {
@@ -30,4 +35,44 @@ func quantize(c lrgb) (code int, residual lrgb) {
 		b: c.b - float64(b)/5.0,
 	}
 	return
+}
+
+func randColor() lrgb {
+	return lrgb{
+		rand.Float64(),
+		rand.Float64(),
+		rand.Float64(),
+	}
+}
+
+func lerp(c1, c2 lrgb, f float64) lrgb {
+	return lrgb{
+		c1.r*(1-f) + c2.r*f,
+		c1.g*(1-f) + c2.g*f,
+		c1.b*(1-f) + c2.b*f,
+	}
+}
+
+func scale(c lrgb, f float64) lrgb {
+	return lrgb{
+		c.r * f,
+		c.g * f,
+		c.b * f,
+	}
+}
+
+func capp(c lrgb) lrgb {
+	return lrgb{
+		math.Min(1, math.Max(0, c.r)),
+		math.Min(1, math.Max(0, c.g)),
+		math.Min(1, math.Max(0, c.b)),
+	}
+}
+
+func add(a, b lrgb) lrgb {
+	return lrgb{
+		a.r + b.r,
+		a.g + b.g,
+		a.b + b.b,
+	}
 }
