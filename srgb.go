@@ -16,7 +16,7 @@ func bound(i int) int {
 	return i
 }
 
-func foo(c lrgb) (code int, residual lrgb) {
+func quantize(c lrgb) (code int, residual lrgb) {
 	// TODO: This should really take into account where the 6 barrier
 	// points are.
 	r := bound(int(c.r * 6))

@@ -30,7 +30,7 @@ func (s *screen) print(w io.Writer) {
 	var buf bytes.Buffer
 	writeCursorPosition(&buf, 1, 1)
 	for i := range s.data {
-		code, qerr := foo(s.data[i])
+		code, qerr := quantize(s.data[i])
 		fmt.Fprintf(&buf, "\x1b[48;5;%dm ", code)
 		r, c := s.rowCol(i)
 		qerr.r /= 16.0
@@ -68,21 +68,6 @@ func (s *screen) print(w io.Writer) {
 	}
 	buf.Write([]byte("\x1b[m")) // SGR0
 	io.Copy(w, &buf)
-}
-
-func quantize(v float64) (int, float64) {
-	switch {
-	case v < 0.2:
-		return 0, v
-	case v < 0.4:
-		return 1, v - 0.25
-	case v < 0.6:
-		return 2, v - 0.5
-	case v < 0.8:
-		return 3, v - 0.75
-	default:
-		return 4, v - 1.0
-	}
 }
 
 func termSize() (rows, cols int) {
