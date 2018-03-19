@@ -30,7 +30,7 @@ func (s *screen) print(w io.Writer) {
 	var buf bytes.Buffer
 	writeCursorPosition(&buf, 1, 1)
 	for i := range s.data {
-		code, qerr := quantize(s.data[i])
+		code, qerr := s.data[i].quantize()
 		fmt.Fprintf(&buf, "\x1b[48;5;%dm ", code)
 		r, c := s.rowCol(i)
 		qerr.r /= 16.0
