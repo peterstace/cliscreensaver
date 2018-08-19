@@ -25,6 +25,6 @@ func main() {
 			s.data[i] = c1.lerp(c2, f)
 		}
 		s.print(os.Stdout)
-		time.Sleep(time.Second / 30)
+		time.Sleep(time.Second / 2)
 	}
 }
